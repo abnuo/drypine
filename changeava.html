@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="style.css">
+<div>
+<input id="avatar" type="file" accept=".jpg, .jpeg, .png, .gif" />
+<form action="/changeavatar.php" method="post" enctype="multipart/form-data">
+<button onclick="Main()">Submit</button>
+</form>
+</div>
+<script>
+function post(path, params, method='post') {
+  const form = document.createElement('form');
+  form.method = method;
+  form.action = path;
+
+  for (const key in params) {
+    if (params.hasOwnProperty(key)) {
+      const hiddenField = document.createElement('input');
+      hiddenField.type = 'hidden';
+      hiddenField.name = key;
+      hiddenField.value = params[key];
+
+      form.appendChild(hiddenField);
+    }
+  }
+  document.body.appendChild(form);
+  form.submit();
+}
+
+
+file = document.getElementById('avatar').files[0]
+const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
+});
+
+async function Main() {
+   const file = document.getElementById('avatar').files[0];
+   post('/changeavatar.php',{'avatar': await toBase64(file)})
+}
+
+</script>
+
+
